@@ -1,0 +1,24 @@
+name: Automated Accessibility Audit
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  a11y-audit:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Run A11y Agent Review
+        # Note: Using the gh copilot CLI (2026 version) to execute the agent
+        run: |
+          gh copilot -i "review-pr \
+            --agent .github/agents/PR-Reviewer.agent.md"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
